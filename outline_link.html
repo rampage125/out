@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outline</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { overflow-x: hidden; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: #1b1b1b;
+    position: relative;
+  }
+
+  /* Scanlines overlay */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.04) 0px,
+      rgba(0, 0, 0, 0.04) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    pointer-events: none;
+    z-index: 9998;
+    animation: scanmove 8s linear infinite;
+  }
+  @keyframes scanmove {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(3px); }
+  }
+
+  /* Screen jitter */
+  .stage {
+    width: 100%;
+    max-width: 480px;
+    animation: jitter 2.4s infinite steps(1);
+  }
+  @keyframes jitter {
+    0%, 92%, 100% { transform: translate(0, 0); }
+    93%   { transform: translate(-2px, 1px); }
+    94%   { transform: translate(3px, -2px); }
+    95%   { transform: translate(-1px, 2px); }
+    96%   { transform: translate(2px, 0); }
+    97%   { transform: translate(-3px, -1px); }
+    98%   { transform: translate(1px, 1px); }
+  }
+
+  /* Big glitch bursts */
+  .stage.burst { animation: bigburst 0.4s steps(1); }
+  @keyframes bigburst {
+    0%   { transform: translate(0,0)   skewX(0deg); filter: hue-rotate(0deg); }
+    20%  { transform: translate(-8px,3px) skewX(-3deg); filter: hue-rotate(-30deg); }
+    40%  { transform: translate(6px,-4px) skewX(2deg);  filter: hue-rotate(40deg); }
+    60%  { transform: translate(-4px,2px) skewX(-1deg); filter: hue-rotate(-10deg); }
+    80%  { transform: translate(3px,-1px) skewX(1deg);  filter: hue-rotate(15deg); }
+    100% { transform: translate(0,0)     skewX(0deg);   filter: hue-rotate(0deg); }
+  }
+
+  .card {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 32px 28px;
+    width: 100%;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Outline logo (paper plane stylized) */
+  .logo-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 18px;
+    position: relative;
+  }
+  .logo {
+    width: 72px;
+    height: 72px;
+    background: #00bfa5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .logo svg { width: 38px; height: 38px; fill: #fff; }
+
+  /* Glitch text */
+  .brand {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #1b1b1b;
+    position: relative;
+    margin-bottom: 4px;
+  }
+  .brand::before,
+  .brand::after {
+    content: "Outline";
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    text-align: center;
+  }
+  .brand::before {
+    color: #00bfa5;
+    animation: glitchA 2.8s infinite steps(1);
+    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+  }
+  .brand::after {
+    color: #ff3860;
+    animation: glitchB 2.8s infinite steps(1);
+    clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+  }
+  @keyframes glitchA {
+    0%, 90%, 100% { transform: translate(0,0); opacity: 0; }
+    91% { transform: translate(-3px, -1px); opacity: 1; }
+    93% { transform: translate(2px, 1px); opacity: 1; }
+    95% { transform: translate(-1px, 0); opacity: 1; }
+  }
+  @keyframes glitchB {
+    0%, 90%, 100% { transform: translate(0,0); opacity: 0; }
+    91% { transform: translate(3px, 1px); opacity: 1; }
+    93% { transform: translate(-2px, -1px); opacity: 1; }
+    95% { transform: translate(1px, 0); opacity: 1; }
+  }
+
+  .subtitle {
+    text-align: center;
+    font-size: 13px;
+    color: #767676;
+    margin-bottom: 22px;
+  }
+
+  .label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #767676;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 8px;
+  }
+
+  .link-box {
+    background: #f5f5f5;
+    border: 1px solid #e6e6e6;
+    border-radius: 12px;
+    padding: 14px;
+    font-family: "SF Mono", Consolas, Monaco, monospace;
+    font-size: 11px;
+    word-break: break-all;
+    color: #1b1b1b;
+    margin-bottom: 20px;
+    max-height: 130px;
+    overflow-y: auto;
+    line-height: 1.5;
+  }
+
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  a.btn, button.btn {
+    width: 100%;
+    padding: 14px 18px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    font-family: inherit;
+    transition: background 0.15s, transform 0.1s;
+  }
+  a.btn {
+    background: #00bfa5;
+    color: #fff;
+  }
+  a.btn:hover { background: #00a890; }
+  a.btn:active { transform: scale(0.98); }
+  button.btn {
+    background: #ffffff;
+    color: #1b1b1b;
+    border: 1.5px solid #e6e6e6;
+  }
+  button.btn:hover { background: #f5f5f5; }
+
+  /* RGB split overlay glitch bar */
+  .glitch-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    height: 30px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(0, 191, 165, 0.18) 30%,
+      rgba(255, 56, 96, 0.18) 70%,
+      transparent 100%
+    );
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    mix-blend-mode: difference;
+  }
+  .glitch-bar.active {
+    animation: bar 0.5s linear;
+  }
+  @keyframes bar {
+    0%   { top: -10%; opacity: 1; }
+    100% { top: 110%; opacity: 1; }
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(120px);
+    background: #00bfa5;
+    color: #fff;
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: transform 0.3s;
+    z-index: 10000;
+    box-shadow: 0 4px 16px rgba(0, 191, 165, 0.4);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+  <div class="glitch-bar" id="glitchBar"></div>
+
+  <div class="stage" id="stage">
+    <div class="card">
+      <div class="logo-wrap">
+        <div class="logo">
+          <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+        </div>
+      </div>
+      <div class="brand">Outline</div>
+      <div class="subtitle">ee-03763c1127 · 66.90.90.98:8115</div>
+
+      <div class="label">Access key</div>
+      <div class="link-box" id="link">ss://YWVzLTI1Ni1nY206WW1VeU1XUXhaRGhsTmpRNU0yUXpPR0ZpT1RBMk5EZzNNamt5TkRVMQ@66.90.90.98:8115?prefix=%16%03%01%00%C2%A8%01%01#ee-03763c1127</div>
+
+      <div class="buttons">
+        <a class="btn" href="ss://YWVzLTI1Ni1nY206WW1VeU1XUXhaRGhsTmpRNU0yUXpPR0ZpT1RBMk5EZzNNamt5TkRVMQ@66.90.90.98:8115?prefix=%16%03%01%00%C2%A8%01%01#ee-03763c1127">Add to Outline</a>
+        <button class="btn" onclick="copyLink()">Copy access key</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Скопировано</div>
+
+<script>
+  function copyLink() {
+    const text = document.getElementById('link').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      const t = document.getElementById('toast');
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 1500);
+    });
+  }
+
+  // Random glitch bursts
+  const stage = document.getElementById('stage');
+  const bar = document.getElementById('glitchBar');
+
+  function triggerBurst() {
+    stage.classList.add('burst');
+    setTimeout(() => stage.classList.remove('burst'), 400);
+  }
+  function triggerBar() {
+    bar.classList.remove('active');
+    void bar.offsetWidth;
+    bar.classList.add('active');
+  }
+
+  function loop() {
+    const delay = 1500 + Math.random() * 3500;
+    setTimeout(() => {
+      if (Math.random() > 0.4) triggerBurst();
+      if (Math.random() > 0.5) triggerBar();
+      loop();
+    }, delay);
+  }
+  loop();
+</script>
+</body>
+</html>
