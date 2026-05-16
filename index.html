@@ -1,35 +1,112 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Outline</title>
+<title>OUTLINE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { overflow-x: hidden; }
+
+  :root {
+    --bg:        #000000;
+    --bg-1:      #08090b;
+    --line:      #1d1f24;
+    --line-2:    #2a2d34;
+    --fg:        #e8e8e8;
+    --fg-dim:    #5a5d66;
+    --fg-mute:   #34373d;
+    --acc:       #c8ff00;
+    --acc-soft:  rgba(200, 255, 0, 0.12);
+    --red:       #ff2e3a;
+  }
+
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: #ffffff;
+    font-family: "Chakra Petch", "Share Tech Mono", monospace;
+    background: var(--bg);
     min-height: 100vh;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    padding: 20px;
-    color: #1b1b1b;
+    padding: 22vh 18px 24px;
+    color: var(--fg);
     position: relative;
   }
 
-  /* Scanlines overlay */
-  body::before {
-    content: "";
+  /* Weyland-Yutani style background grid — мелкие плюсики */
+  .grid-bg {
     position: fixed;
     inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      linear-gradient(0deg, transparent calc(50% - 0.5px), rgba(200,255,0,0.22) calc(50% - 0.5px), rgba(200,255,0,0.22) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+      linear-gradient(90deg, transparent calc(50% - 0.5px), rgba(200,255,0,0.22) calc(50% - 0.5px), rgba(200,255,0,0.22) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+    background-size: 28px 28px;
+    -webkit-mask-image: radial-gradient(circle at 14px 14px, #000 3.5px, transparent 4px);
+    mask-image: radial-gradient(circle at 14px 14px, #000 3.5px, transparent 4px);
+    -webkit-mask-size: 28px 28px;
+    mask-size: 28px 28px;
+    opacity: 0.5;
+    animation: gridDrift 4s infinite steps(1);
+    will-change: background-position, transform, opacity;
+  }
+  @keyframes gridDrift {
+    0%   { background-position: 0 0; transform: translate(0,0); opacity: 0.5; }
+    18%  { background-position: 0 0; transform: translate(0,0); opacity: 0.5; }
+    19%  { background-position: 1px 0; transform: translate(0,0); opacity: 0.55; }
+    20%  { background-position: 0 0; transform: translate(0,0); opacity: 0.5; }
+    44%  { background-position: 0 0; transform: translate(0,0); opacity: 0.5; }
+    45%  { background-position: -2px 1px; transform: translate(0,0); opacity: 0.6; }
+    46%  { background-position: 3px -1px; transform: translate(0,0); opacity: 0.4; }
+    47%  { background-position: 0 0; transform: translate(0,0); opacity: 0.5; }
+    72%  { background-position: 0 0; transform: translate(0,0); opacity: 0.5; }
+    73%  { background-position: 0 2px; transform: translate(0,-3px); opacity: 0.7; }
+    74%  { background-position: -1px 0; transform: translate(0,0); opacity: 0.5; }
+    88%  { background-position: 0 0; transform: translate(0,0); opacity: 0.5; }
+    89%  { background-position: 4px 0; transform: translate(0,0); opacity: 0.3; }
+    90%  { background-position: 0 0; transform: translate(0,0); opacity: 0.5; }
+    100% { background-position: 0 0; transform: translate(0,0); opacity: 0.5; }
+  }
+  .grid-bg.heavy {
+    animation: gridHeavy 0.5s steps(1);
+  }
+  @keyframes gridHeavy {
+    0%   { transform: translate(0,0)     skewX(0); opacity: 0.5; filter: hue-rotate(0); }
+    20%  { transform: translate(-6px,2px) skewX(-2deg); opacity: 0.85; filter: hue-rotate(20deg); }
+    40%  { transform: translate(5px,-3px) skewX(2deg); opacity: 0.3; filter: hue-rotate(-15deg); }
+    60%  { transform: translate(-2px,1px) skewX(-1deg); opacity: 0.7; filter: hue-rotate(0); }
+    80%  { transform: translate(3px,0)    skewX(1deg); opacity: 0.5; filter: hue-rotate(0); }
+    100% { transform: translate(0,0)     skewX(0); opacity: 0.5; filter: hue-rotate(0); }
+  }
+
+  body::before, body::after {
+    content: "";
+    position: fixed;
+    width: 12px; height: 12px;
+    pointer-events: none;
+    z-index: 50;
+  }
+  body::before {
+    top: 10px; left: 10px;
+    border-top: 1px solid var(--line-2);
+    border-left: 1px solid var(--line-2);
+  }
+  body::after {
+    bottom: 10px; right: 10px;
+    border-bottom: 1px solid var(--line-2);
+    border-right: 1px solid var(--line-2);
+  }
+
+  .scan {
+    position: fixed; inset: 0;
     background: repeating-linear-gradient(
       0deg,
-      rgba(0, 0, 0, 0.04) 0px,
-      rgba(0, 0, 0, 0.04) 1px,
-      transparent 1px,
-      transparent 3px
+      rgba(255,255,255,0.02) 0 1px,
+      transparent 1px 3px
     );
     pointer-events: none;
     z-index: 9998;
@@ -40,185 +117,285 @@
     100% { transform: translateY(3px); }
   }
 
-  /* Screen jitter */
   .stage {
     width: 100%;
-    max-width: 480px;
-    animation: jitter 2.4s infinite steps(1);
+    max-width: 440px;
+    position: relative;
+    z-index: 1;
+    animation: jitter 3s infinite steps(1);
   }
   @keyframes jitter {
-    0%, 92%, 100% { transform: translate(0, 0); }
-    93%   { transform: translate(-2px, 1px); }
-    94%   { transform: translate(3px, -2px); }
-    95%   { transform: translate(-1px, 2px); }
-    96%   { transform: translate(2px, 0); }
-    97%   { transform: translate(-3px, -1px); }
-    98%   { transform: translate(1px, 1px); }
+    0%, 94%, 100% { transform: translate(0,0); }
+    95% { transform: translate(-1px, 1px); }
+    96% { transform: translate(2px, -1px); }
+    97% { transform: translate(-1px, 0); }
+    98% { transform: translate(1px, 1px); }
   }
-
-  /* Big glitch bursts */
-  .stage.burst { animation: bigburst 0.4s steps(1); }
+  .stage.burst { animation: bigburst 0.35s steps(1); }
   @keyframes bigburst {
-    0%   { transform: translate(0,0)   skewX(0deg); filter: hue-rotate(0deg); }
-    20%  { transform: translate(-8px,3px) skewX(-3deg); filter: hue-rotate(-30deg); }
-    40%  { transform: translate(6px,-4px) skewX(2deg);  filter: hue-rotate(40deg); }
-    60%  { transform: translate(-4px,2px) skewX(-1deg); filter: hue-rotate(-10deg); }
-    80%  { transform: translate(3px,-1px) skewX(1deg);  filter: hue-rotate(15deg); }
-    100% { transform: translate(0,0)     skewX(0deg);   filter: hue-rotate(0deg); }
+    0%   { transform: translate(0,0)     skewX(0); }
+    25%  { transform: translate(-6px,2px) skewX(-2deg); }
+    50%  { transform: translate(5px,-3px) skewX(2deg); }
+    75%  { transform: translate(-3px,1px) skewX(-1deg); }
+    100% { transform: translate(0,0)     skewX(0); }
   }
 
-  .card {
-    background: #ffffff;
-    border-radius: 24px;
-    padding: 32px 28px;
-    width: 100%;
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
-    position: relative;
-    overflow: hidden;
-  }
-
-  /* Outline logo (paper plane stylized) */
-  .logo-wrap {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 18px;
-    position: relative;
-  }
-  .logo {
-    width: 72px;
-    height: 72px;
-    background: #00bfa5;
-    border-radius: 50%;
+  .header {
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .logo {
+    width: 38px; height: 44px;
+    border: 2px solid var(--acc);
+    border-bottom: none;
     position: relative;
   }
-  .logo svg { width: 38px; height: 38px; fill: #fff; }
-
-  /* Glitch text */
-  .brand {
-    text-align: center;
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    color: #1b1b1b;
-    position: relative;
-    margin-bottom: 4px;
-  }
-  .brand::before,
-  .brand::after {
-    content: "Outline";
+  .logo::after {
+    content: "";
     position: absolute;
-    left: 0; right: 0; top: 0;
-    text-align: center;
+    left: -2px; right: -2px;
+    bottom: -16px;
+    height: 16px;
+    background:
+      linear-gradient(135deg, transparent 49%, var(--acc) 49% 52%, transparent 52%) left / 50% 100% no-repeat,
+      linear-gradient(225deg, transparent 49%, var(--acc) 49% 52%, transparent 52%) right / 50% 100% no-repeat;
   }
-  .brand::before {
-    color: #00bfa5;
-    animation: glitchA 2.8s infinite steps(1);
-    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+  .title {
+    font-family: "Chakra Petch", monospace;
+    font-size: 48px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    text-transform: lowercase;
+    position: relative;
   }
-  .brand::after {
-    color: #ff3860;
-    animation: glitchB 2.8s infinite steps(1);
-    clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+  .title::before, .title::after {
+    content: "outline";
+    position: absolute;
+    top: 0; left: 0;
+    letter-spacing: 4px;
+  }
+  .title::before {
+    color: var(--acc);
+    animation: glitchA 3s infinite steps(1);
+    clip-path: polygon(0 0, 100% 0, 100% 48%, 0 48%);
+  }
+  .title::after {
+    color: var(--red);
+    animation: glitchB 3s infinite steps(1);
+    clip-path: polygon(0 52%, 100% 52%, 100% 100%, 0 100%);
   }
   @keyframes glitchA {
-    0%, 90%, 100% { transform: translate(0,0); opacity: 0; }
-    91% { transform: translate(-3px, -1px); opacity: 1; }
+    0%, 92%, 100% { transform: translate(0,0); opacity: 0; }
+    93% { transform: translate(-2px,-1px); opacity: 1; }
+    95% { transform: translate(1px, 0); opacity: 1; }
+  }
+  @keyframes glitchB {
+    0%, 92%, 100% { transform: translate(0,0); opacity: 0; }
     93% { transform: translate(2px, 1px); opacity: 1; }
     95% { transform: translate(-1px, 0); opacity: 1; }
   }
-  @keyframes glitchB {
-    0%, 90%, 100% { transform: translate(0,0); opacity: 0; }
-    91% { transform: translate(3px, 1px); opacity: 1; }
-    93% { transform: translate(-2px, -1px); opacity: 1; }
-    95% { transform: translate(1px, 0); opacity: 1; }
-  }
-
-  .subtitle {
-    text-align: center;
-    font-size: 13px;
-    color: #767676;
-    margin-bottom: 22px;
-  }
-
-  .label {
-    font-size: 12px;
-    font-weight: 600;
-    color: #767676;
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    margin-bottom: 8px;
-  }
-
-  .link-box {
-    background: #f5f5f5;
-    border: 1px solid #e6e6e6;
-    border-radius: 12px;
-    padding: 14px;
-    font-family: "SF Mono", Consolas, Monaco, monospace;
+  .header-id {
+    margin-left: auto;
+    text-align: right;
+    font-family: "JetBrains Mono", monospace;
     font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--fg-dim);
+  }
+  .header-id .dot {
+    display: inline-block;
+    width: 5px; height: 5px;
+    background: var(--acc);
+    margin-right: 4px;
+    vertical-align: middle;
+    box-shadow: 0 0 6px var(--acc);
+    animation: blink 1.6s infinite steps(2);
+  }
+  @keyframes blink { 50% { opacity: 0.2; } }
+
+  .field {
+    position: relative;
+    padding: 10px 12px 12px;
+    border: 1px solid var(--line);
+    background: var(--bg-1);
+    margin-bottom: 18px;
+  }
+  .field-label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--fg-dim);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .field-label .num { color: var(--acc); }
+  .field-value {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12.5px;
+    color: var(--acc);
     word-break: break-all;
-    color: #1b1b1b;
-    margin-bottom: 20px;
-    max-height: 130px;
+    line-height: 1.55;
+    max-height: 110px;
     overflow-y: auto;
-    line-height: 1.5;
+    padding-right: 4px;
+  }
+  .field-value::-webkit-scrollbar { width: 2px; }
+  .field-value::-webkit-scrollbar-thumb { background: var(--acc); }
+  .field-value::-webkit-scrollbar-track { background: transparent; }
+
+  .field::before, .field::after {
+    content: "";
+    position: absolute;
+    width: 8px; height: 8px;
+    border-color: var(--acc);
+    border-style: solid;
+  }
+  .field::before {
+    top: -1px; left: -1px;
+    border-width: 1px 0 0 1px;
+  }
+  .field::after {
+    bottom: -1px; right: -1px;
+    border-width: 0 1px 1px 0;
   }
 
-  .buttons {
+  .meta {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1px;
+    background: var(--line);
+    margin-bottom: 22px;
+    border: 1px solid var(--line);
+  }
+  .meta-cell {
+    background: var(--bg);
+    padding: 10px 12px;
+  }
+  .meta-cell .k {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--fg-dim);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .meta-cell .v {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    color: var(--fg);
+    letter-spacing: 1px;
+  }
+
+  .actions {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
   }
-  a.btn, button.btn {
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     width: 100%;
-    padding: 14px 18px;
+    padding: 16px 18px;
     border: none;
-    border-radius: 12px;
+    font-family: "Chakra Petch", monospace;
     font-size: 15px;
     font-weight: 600;
-    cursor: pointer;
-    text-align: center;
+    letter-spacing: 3px;
+    text-transform: uppercase;
     text-decoration: none;
-    font-family: inherit;
-    transition: background 0.15s, transform 0.1s;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.12s linear;
   }
-  a.btn {
-    background: #00bfa5;
-    color: #fff;
+  .btn-primary {
+    background: var(--acc);
+    color: var(--bg);
   }
-  a.btn:hover { background: #00a890; }
-  a.btn:active { transform: scale(0.98); }
-  button.btn {
-    background: #ffffff;
-    color: #1b1b1b;
-    border: 1.5px solid #e6e6e6;
+  .btn-primary:hover {
+    background: var(--fg);
+    transform: translateX(2px);
   }
-  button.btn:hover { background: #f5f5f5; }
+  .btn-primary:active { transform: scale(0.99); }
+  .btn-primary .arrow {
+    width: 28px;
+    height: 12px;
+    position: relative;
+  }
+  .btn-primary .arrow::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--bg);
+    transform: translateY(-50%);
+  }
+  .btn-primary .arrow::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 8px; height: 8px;
+    border-right: 2px solid var(--bg);
+    border-top: 2px solid var(--bg);
+    transform: translateY(-50%) rotate(45deg);
+  }
 
-  /* RGB split overlay glitch bar */
+  .btn-ghost {
+    background: var(--bg);
+    color: var(--fg);
+    border: 1px solid var(--line-2);
+  }
+  .btn-ghost:hover {
+    border-color: var(--acc);
+    color: var(--acc);
+  }
+  .btn-ghost .arrow-ghost {
+    color: var(--fg-dim);
+    font-family: monospace;
+  }
+  .btn-ghost:hover .arrow-ghost { color: var(--acc); }
+
+  .foot {
+    margin-top: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--fg-mute);
+    text-transform: uppercase;
+  }
+  .foot .line {
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+    margin: 0 10px;
+  }
+
   .glitch-bar {
     position: fixed;
-    left: 0;
-    right: 0;
-    height: 30px;
+    left: 0; right: 0;
+    height: 24px;
     background: linear-gradient(
       90deg,
       transparent 0%,
-      rgba(0, 191, 165, 0.18) 30%,
-      rgba(255, 56, 96, 0.18) 70%,
+      var(--acc-soft) 50%,
       transparent 100%
     );
     pointer-events: none;
     z-index: 9999;
     opacity: 0;
-    mix-blend-mode: difference;
+    mix-blend-mode: screen;
   }
-  .glitch-bar.active {
-    animation: bar 0.5s linear;
-  }
+  .glitch-bar.active { animation: bar 0.45s linear; }
   @keyframes bar {
     0%   { top: -10%; opacity: 1; }
     100% { top: 110%; opacity: 1; }
@@ -226,46 +403,74 @@
 
   .toast {
     position: fixed;
-    bottom: 30px;
+    bottom: 24px;
     left: 50%;
     transform: translateX(-50%) translateY(120px);
-    background: #00bfa5;
-    color: #fff;
-    padding: 12px 22px;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 14px;
-    transition: transform 0.3s;
+    background: var(--acc);
+    color: var(--bg);
+    padding: 10px 18px;
+    font-family: "Chakra Petch", monospace;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    transition: transform 0.25s;
     z-index: 10000;
-    box-shadow: 0 4px 16px rgba(0, 191, 165, 0.4);
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
+  <div class="grid-bg"></div>
+  <div class="scan"></div>
   <div class="glitch-bar" id="glitchBar"></div>
 
   <div class="stage" id="stage">
-    <div class="card">
-      <div class="logo-wrap">
-        <div class="logo">
-          <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
-        </div>
-      </div>
-      <div class="brand">Outline</div>
-      <div class="subtitle">ee-a89f8702aa · 66.90.90.98:8115</div>
 
-      <div class="label">Access key</div>
-      <div class="link-box" id="link">ss://YWVzLTI1Ni1nY206TTJWa1pEUm1NVFJsTkRkaE9UWXdZVFZoWkRFM1ptUmtOMlUzTWpoaA@66.90.90.98:8115?prefix=%16%03%01%00%C2%A8%01%01#ee-a89f8702aa</div>
-
-      <div class="buttons">
-        <a class="btn" href="ss://YWVzLTI1Ni1nY206TTJWa1pEUm1NVFJsTkRkaE9UWXdZVFZoWkRFM1ptUmtOMlUzTWpoaA@66.90.90.98:8115?prefix=%16%03%01%00%C2%A8%01%01#ee-a89f8702aa">Add to Outline</a>
-        <button class="btn" onclick="copyLink()">Copy access key</button>
+    <div class="header">
+      <div class="logo"></div>
+      <div class="title">outline</div>
+      <div class="header-id">
+        <div><span class="dot"></span>SECURE</div>
+        <div>// 01</div>
       </div>
     </div>
+
+    <div class="meta">
+      <div class="meta-cell">
+        <div class="k">node</div>
+        <div class="v">ee-a89f8702aa</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">
+        <span>access key //</span>
+        <span class="num">256</span>
+      </div>
+      <div class="field-value" id="link">ss://YWVzLTI1Ni1nY206TTJWa1pEUm1NVFJsTkRkaE9UWXdZVFZoWkRFM1ptUmtOMlUzTWpoaA@66.90.90.98:8115?prefix=%16%03%01%00%C2%A8%01%01#ee-a89f8702aa</div>
+    </div>
+
+    <div class="actions">
+      <a class="btn btn-primary" href="ss://YWVzLTI1Ni1nY206TTJWa1pEUm1NVFJsTkRkaE9UWXdZVFZoWkRFM1ptUmtOMlUzTWpoaA@66.90.90.98:8115?prefix=%16%03%01%00%C2%A8%01%01#ee-a89f8702aa">
+        <span>go to outline</span>
+        <span class="arrow"></span>
+      </a>
+      <button class="btn btn-ghost" onclick="copyLink()">
+        <span>copy</span>
+        <span class="arrow-ghost">▸</span>
+      </button>
+    </div>
+
+    <div class="foot">
+      <span>aes-256-gcm</span>
+      <span class="line"></span>
+      <span>ok</span>
+    </div>
+
   </div>
 
-  <div class="toast" id="toast">Скопировано</div>
+  <div class="toast" id="toast">copied</div>
 
 <script>
   function copyLink() {
@@ -273,29 +478,37 @@
     navigator.clipboard.writeText(text).then(() => {
       const t = document.getElementById('toast');
       t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 1500);
+      setTimeout(() => t.classList.remove('show'), 1400);
     });
   }
 
-  // Random glitch bursts
   const stage = document.getElementById('stage');
   const bar = document.getElementById('glitchBar');
+  const grid = document.querySelector('.grid-bg');
 
   function triggerBurst() {
     stage.classList.add('burst');
-    setTimeout(() => stage.classList.remove('burst'), 400);
+    setTimeout(() => stage.classList.remove('burst'), 350);
   }
   function triggerBar() {
     bar.classList.remove('active');
     void bar.offsetWidth;
     bar.classList.add('active');
   }
-
+  function triggerGridHeavy() {
+    grid.classList.remove('heavy');
+    void grid.offsetWidth;
+    grid.classList.add('heavy');
+    setTimeout(() => grid.classList.remove('heavy'), 500);
+  }
   function loop() {
-    const delay = 1500 + Math.random() * 3500;
+    const delay = 1200 + Math.random() * 2800;
     setTimeout(() => {
-      if (Math.random() > 0.4) triggerBurst();
-      if (Math.random() > 0.5) triggerBar();
+      const r = Math.random();
+      if (r > 0.3) triggerBurst();
+      if (r > 0.5) triggerBar();
+      if (r > 0.6) triggerGridHeavy();
+      if (r > 0.85) setTimeout(triggerBurst, 120);
       loop();
     }, delay);
   }
